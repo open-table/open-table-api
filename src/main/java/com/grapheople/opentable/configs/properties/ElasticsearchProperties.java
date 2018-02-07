@@ -1,4 +1,4 @@
-package com.grapheople.opentable.properties;
+package com.grapheople.opentable.configs.properties;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
