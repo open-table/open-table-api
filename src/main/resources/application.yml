@@ -1,2 +1,18 @@
+spring:
+  datasource:
+    hikari:
+      jdbc-url: ENC(CHx7YCJVh1JwsJd4NvesxJMaZB5IaVlKVpRRk8atYlJu/6wfIUgRwb5ChAACHhsGtDK8LCMM1PJIWPB45CWGmW8wnzr5F/8VnM9/F3xomH4YqlIqN9BOxKOVR8vHaZfLeTjPldsXnb7ka7BhsYBeZSr5kl9pRDeMc01HM91iv6BnntPxOE1PIQ==)
+      driver-class-name: com.mysql.jdbc.Driver
+      connection-timeout: 60000
+      maximum-pool-size: 5
+      username: ENC(Udb4l5DfsmqofWab//2WIA==)
+      password: ENC(rpGTUKqoHXoOD+0bgKtpiY6KswWmBZX2)
+
+
 elasticsearch:
-  url: http://pax-test.pg1.krane.9rum.cc:9200
+  url: ENC(+fN++aKcc0BbzEd81Nv2SLM0xBp9Ocx8Nw/voDThdwVd/Nm4BxX8mCNlsAKNml4J)
+google:
+  key: ENC(RXZTJ7QPZ+Gueck4qiUvm5/G+MWoeU5fXT3KMtHk4O0lUpTi6zwT2JWO+n8oJ8kO)
+naver:
+  id: ENC(9v4pM1mTrHac38Rd+sQCp5gBQZkAX+/U0MVvdA/JnXE=)
+  secret: ENC(AEo6hu3XfpfBZ4PaS3NYtJp5XQ1BI8rF)
