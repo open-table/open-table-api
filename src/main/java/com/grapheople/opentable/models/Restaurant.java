@@ -3,12 +3,8 @@ package com.grapheople.opentable.models;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Data;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.List;
 
 /**
  * Created by pax on 2018. 2. 7..
@@ -49,15 +45,19 @@ public class Restaurant {
     @Column(name = "mapy")
     private Integer mapy;
 
+    @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "restaurant_id")
+    private List<RestaurantDistance> restaurantDistance;
+
     public Restaurant() {
 
     }
 
     public Restaurant(JsonNode jsonNode) {
-        setTitle(jsonNode.get("title").asText());
+        setTitle(jsonNode.get("title").asText().replaceAll("\\<.*?>",""));
         setLink(jsonNode.get("link").asText());
-        setCategory(jsonNode.get("category").asText());
-        setDescription(jsonNode.get("description").asText());
+        setCategory(jsonNode.get("category").asText().replaceAll("음식점>", "").replaceAll(">", ","));
+        setDescription(jsonNode.get("description").asText().replaceAll("\\<.*?>",""));
         setTelephone(jsonNode.get("telephone").asText());
         setRoadAddress(jsonNode.get("roadAddress").asText());
         setAddress(jsonNode.get("address").asText());
