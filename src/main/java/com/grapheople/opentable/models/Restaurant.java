@@ -50,6 +50,10 @@ public class Restaurant {
     @Column(name = "mapy")
     private Integer mapy;
 
+    public Restaurant() {
+
+    }
+
     public Restaurant(JsonNode jsonNode) {
         setTitle(jsonNode.get("title").asText());
         setLink(jsonNode.get("link").asText());

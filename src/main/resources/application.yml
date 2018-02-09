@@ -1,12 +1,13 @@
 spring:
   datasource:
+    url: ENC(qzNo5V6cA2K5PaJPKl1tBKKHDCkil2CfE1YxW8CkejICOrhB/sv8KOtL3fJRbVAsFo1+e6FyJ9CheykY5TRyHqSVvzy8P+7XNp1YShj2hG5xqd3el5Ec1Sy06i9PrumGXRi/TKfdSZGlfMuLQi9cFEDIRvXPWFt7v4YMJTX5u3+qfis8fGFXUQ==)
+    username: ENC(Udb4l5DfsmqofWab//2WIA==)
+    password: ENC(rpGTUKqoHXoOD+0bgKtpiY6KswWmBZX2)
+    type: com.zaxxer.hikari.HikariDataSource
     hikari:
-      jdbc-url: ENC(CHx7YCJVh1JwsJd4NvesxJMaZB5IaVlKVpRRk8atYlJu/6wfIUgRwb5ChAACHhsGtDK8LCMM1PJIWPB45CWGmW8wnzr5F/8VnM9/F3xomH4YqlIqN9BOxKOVR8vHaZfLeTjPldsXnb7ka7BhsYBeZSr5kl9pRDeMc01HM91iv6BnntPxOE1PIQ==)
       driver-class-name: com.mysql.jdbc.Driver
       connection-timeout: 60000
       maximum-pool-size: 5
-      username: ENC(Udb4l5DfsmqofWab//2WIA==)
-      password: ENC(rpGTUKqoHXoOD+0bgKtpiY6KswWmBZX2)
 
 
 elasticsearch:
