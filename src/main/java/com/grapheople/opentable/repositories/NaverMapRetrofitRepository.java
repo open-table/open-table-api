@@ -1,11 +1,9 @@
 package com.grapheople.opentable.repositories;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.grapheople.opentable.configs.properties.NaverApiProperties;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.HeaderMap;
-import retrofit2.http.Headers;
 import retrofit2.http.Query;
 
 import java.util.Map;
