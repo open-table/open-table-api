@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
 import com.grapheople.opentable.configs.properties.NaverApiProperties;
+import com.grapheople.opentable.enums.DistanceType;
 import com.grapheople.opentable.enums.StartingPoint;
 import com.grapheople.opentable.models.Restaurant;
 import com.grapheople.opentable.models.RestaurantDistance;
@@ -19,6 +20,7 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 /**
@@ -33,6 +35,7 @@ public class NaverMapServices {
     private final RestaurantRepository restaurantRepository;
     private final RestaurantDistanceRepository restaurantDistanceRepository;
     private final Map<String, String> headers = Maps.newHashMap();
+    private List<Restaurant> restaurantList;
 
     public NaverMapServices(NaverApiProperties naverApiProperties, RestaurantRepository restaurantRepository, RestaurantDistanceRepository restaurantDistanceRepository) {
         this.restaurantRepository = restaurantRepository;
@@ -55,7 +58,9 @@ public class NaverMapServices {
                 StreamSupport.stream(result.body().get("items").spliterator(), false)
                         .forEach(jsonNode -> {
                             Restaurant savedRestaurant = saveRestaurant(jsonNode);
-                            saveRestaurantDistance(startingPointStr, savedRestaurant.getId(), savedRestaurant.getMapx(), savedRestaurant.getMapy());
+                            if (savedRestaurant != null) {
+                                saveRestaurantDistance(startingPointStr, savedRestaurant.getId(), savedRestaurant.getMapx(), savedRestaurant.getMapy());
+                            }
                         });
             } else {
                 log.error("naver api failed. response code:" + result.code() + " message:" + result.message());
@@ -101,6 +106,33 @@ public class NaverMapServices {
     }
 
     public List<Restaurant> getRestaurantListFromDB() {
-        return restaurantRepository.findAll();
+        if (restaurantList == null) {
+            restaurantList = restaurantRepository.findAll();
+        }
+        return restaurantList;
+    }
+
+    private Integer getDistance(Integer x, Integer y, StartingPoint startingPoint) {
+        Double distance = Math.sqrt(Math.pow(startingPoint.getMapx()-x, 2) + Math.pow(startingPoint.getMapy()-y, 2));
+        return distance.intValue();
+    }
+
+    public List<Restaurant> getRestaurantList(String startingPointStr ,String distanceStr, String category, String title, Integer page, Integer pageSize) {
+        List<Restaurant> result = getRestaurantListFromDB();
+        if (!Strings.isNullOrEmpty(distanceStr) && DistanceType.isExist(distanceStr) && !DistanceType.ALL.getType().equals(distanceStr) && !Strings.isNullOrEmpty(startingPointStr) && StartingPoint.isExist(startingPointStr)) {
+            StartingPoint startingPoint = StartingPoint.convert(startingPointStr);
+            DistanceType distanceType = DistanceType.convert(distanceStr);
+            result = result.stream()
+                    .filter(restaurant -> getDistance(restaurant.getMapx(), restaurant.getMapy(), startingPoint) < distanceType.getDistance())
+                    .collect(Collectors.toList());
+        }
+
+        if (!Strings.isNullOrEmpty(category)) {
+            result= result.stream().filter(restaurant -> restaurant.getCategory().contains(category)).collect(Collectors.toList());
+        }
+        if (!Strings.isNullOrEmpty(title)) {
+            result= result.stream().filter(restaurant -> restaurant.getTitle().contains(title)).collect(Collectors.toList());
+        }
+        return result.stream().skip(page*pageSize).limit(pageSize).collect(Collectors.toList());
     }
 }
