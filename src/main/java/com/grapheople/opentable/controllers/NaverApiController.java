@@ -5,6 +5,9 @@ import com.google.common.base.Strings;
 import com.grapheople.opentable.enums.StartingPoint;
 import com.grapheople.opentable.models.Restaurant;
 import com.grapheople.opentable.services.NaverMapServices;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
 
@@ -24,11 +28,13 @@ import java.util.List;
 public class NaverApiController {
     private final NaverMapServices naverMapServices;
 
+    @ApiIgnore
     @RequestMapping(method = RequestMethod.GET, value = "/restaurants/db")
     public ResponseEntity<List<Restaurant>> getLocalInfoFromDB() {
         return new ResponseEntity<>(naverMapServices.getRestaurantListFromDB(), HttpStatus.OK);
     }
 
+    @ApiIgnore
     @RequestMapping(method = RequestMethod.GET, value = "/restaurants/naver")
     public ResponseEntity<JsonNode> getLocalInfoFromNaver(@RequestParam(value = "query", defaultValue = "random") String query,
                                                           @RequestParam(value = "page", defaultValue = "1") Integer page,
@@ -54,6 +60,7 @@ public class NaverApiController {
         return responseEntity;
     }
 
+    @ApiOperation(value = "식당 조회")
     @RequestMapping(method = RequestMethod.GET, value = "/restaurants")
     public ResponseEntity<List<Restaurant>> getRestaurants(@RequestParam(value = "startingPoint", defaultValue = "PANGYO", required = false) String startingPoint,
                                                            @RequestParam(value = "distanceType", defaultValue = "all", required = false) String distanceType,
