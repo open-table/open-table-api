@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by pax on 2018. 2. 7..
@@ -69,5 +70,11 @@ public class NaverApiController {
                                                            @RequestParam(value = "page", defaultValue = "0", required = false) Integer page,
                                                            @RequestParam(value = "pageSize", defaultValue = "100", required = false) Integer pageSize) {
         return new ResponseEntity<>(naverMapServices.getRestaurantList(startingPoint, distanceType, category, title, page, pageSize), HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "카테고리 리스트")
+    @RequestMapping(method = RequestMethod.GET, value = "/categories")
+    public ResponseEntity<Set<String>> getCategories() {
+        return new ResponseEntity<>(naverMapServices.getCategories(), HttpStatus.OK);
     }
 }

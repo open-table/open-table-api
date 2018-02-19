@@ -2,6 +2,7 @@ package com.grapheople.opentable.services;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.grapheople.opentable.configs.properties.NaverApiProperties;
 import com.grapheople.opentable.enums.DistanceType;
@@ -18,8 +19,10 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -36,6 +39,7 @@ public class NaverMapServices {
     private final RestaurantDistanceRepository restaurantDistanceRepository;
     private final Map<String, String> headers = Maps.newHashMap();
     private List<Restaurant> restaurantList;
+    private Set<String> categories;
 
     public NaverMapServices(NaverApiProperties naverApiProperties, RestaurantRepository restaurantRepository, RestaurantDistanceRepository restaurantDistanceRepository) {
         this.restaurantRepository = restaurantRepository;
@@ -134,5 +138,17 @@ public class NaverMapServices {
             result= result.stream().filter(restaurant -> restaurant.getTitle().contains(title)).collect(Collectors.toList());
         }
         return result.stream().skip(page*pageSize).limit(pageSize).collect(Collectors.toList());
+    }
+
+    public Set<String> getCategories() {
+        if (categories == null) {
+            restaurantList.stream().forEach(restaurant -> {
+                Arrays.stream(restaurant.getCategory().split(",")).forEach(category->{
+                    categories.add(category.trim());
+                });
+            });
+            return categories;
+        }
+        return categories;
     }
 }
