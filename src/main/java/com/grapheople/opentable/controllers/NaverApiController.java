@@ -37,7 +37,7 @@ public class NaverApiController {
 
     @ApiIgnore
     @RequestMapping(method = RequestMethod.GET, value = "/restaurants/naver")
-    public ResponseEntity<JsonNode> getLocalInfoFromNaver(@RequestParam(value = "query", defaultValue = "random") String query,
+    public ResponseEntity<JsonNode> getLocalInfoFromNaver(@RequestParam(value = "query", defaultValue = "판교 음식집") String query,
                                                           @RequestParam(value = "page", defaultValue = "1") Integer page,
                                                           @RequestParam(value = "pageSize", defaultValue = "100") Integer pageSize,
                                                           @RequestParam(value = "sort", defaultValue = "random") String sort) {

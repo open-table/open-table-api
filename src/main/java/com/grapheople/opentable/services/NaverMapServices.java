@@ -2,8 +2,8 @@ package com.grapheople.opentable.services;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.base.Strings;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import com.grapheople.opentable.configs.properties.NaverApiProperties;
 import com.grapheople.opentable.enums.DistanceType;
 import com.grapheople.opentable.enums.StartingPoint;
@@ -61,9 +61,11 @@ public class NaverMapServices {
             if (result.isSuccessful() && result.body().get("items").size() > 0) {
                 StreamSupport.stream(result.body().get("items").spliterator(), false)
                         .forEach(jsonNode -> {
-                            Restaurant savedRestaurant = saveRestaurant(jsonNode);
-                            if (savedRestaurant != null) {
-                                saveRestaurantDistance(startingPointStr, savedRestaurant.getId(), savedRestaurant.getMapx(), savedRestaurant.getMapy());
+                            if (getDistance(jsonNode.get("mapx").asInt(), jsonNode.get("mapy").asInt(), StartingPoint.convert(startingPointStr)) < DistanceType.FAR.getDistance()) {
+                                Restaurant savedRestaurant = saveRestaurant(jsonNode);
+                                if (savedRestaurant != null) {
+                                    saveRestaurantDistance(startingPointStr, savedRestaurant.getId(), savedRestaurant.getMapx(), savedRestaurant.getMapy());
+                                }
                             }
                         });
             } else {
@@ -142,7 +144,8 @@ public class NaverMapServices {
 
     public Set<String> getCategories() {
         if (categories == null) {
-            restaurantList.stream().forEach(restaurant -> {
+            categories = Sets.newHashSet();
+            getRestaurantListFromDB().stream().forEach(restaurant -> {
                 Arrays.stream(restaurant.getCategory().split(",")).forEach(category->{
                     categories.add(category.trim());
                 });
