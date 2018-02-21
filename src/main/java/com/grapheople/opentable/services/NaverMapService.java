@@ -31,7 +31,7 @@ import java.util.stream.StreamSupport;
  */
 @Service
 @Slf4j
-public class NaverMapServices {
+public class NaverMapService {
     private final NaverApiProperties naverApiProperties;
     private final Retrofit retrofit;
     private final NaverMapRetrofitRepository naverMapRetrofitRepository;
@@ -41,7 +41,7 @@ public class NaverMapServices {
     private List<Restaurant> restaurantList;
     private Set<String> categories;
 
-    public NaverMapServices(NaverApiProperties naverApiProperties, RestaurantRepository restaurantRepository, RestaurantDistanceRepository restaurantDistanceRepository) {
+    public NaverMapService(NaverApiProperties naverApiProperties, RestaurantRepository restaurantRepository, RestaurantDistanceRepository restaurantDistanceRepository) {
         this.restaurantRepository = restaurantRepository;
         this.restaurantDistanceRepository = restaurantDistanceRepository;
         this.naverApiProperties = naverApiProperties;

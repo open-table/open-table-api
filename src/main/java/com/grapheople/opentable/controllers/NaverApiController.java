@@ -4,9 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.base.Strings;
 import com.grapheople.opentable.enums.StartingPoint;
 import com.grapheople.opentable.models.Restaurant;
-import com.grapheople.opentable.services.NaverMapServices;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
+import com.grapheople.opentable.services.NaverMapService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -27,12 +25,12 @@ import java.util.Set;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/naver/")
 public class NaverApiController {
-    private final NaverMapServices naverMapServices;
+    private final NaverMapService naverMapService;
 
     @ApiIgnore
     @RequestMapping(method = RequestMethod.GET, value = "/restaurants/db")
     public ResponseEntity<List<Restaurant>> getLocalInfoFromDB() {
-        return new ResponseEntity<>(naverMapServices.getRestaurantListFromDB(), HttpStatus.OK);
+        return new ResponseEntity<>(naverMapService.getRestaurantListFromDB(), HttpStatus.OK);
     }
 
     @ApiIgnore
@@ -42,11 +40,11 @@ public class NaverApiController {
                                                           @RequestParam(value = "pageSize", defaultValue = "100") Integer pageSize,
                                                           @RequestParam(value = "sort", defaultValue = "random") String sort) {
 
-        return new ResponseEntity<>(naverMapServices.getRestaurantLustFromNaver(query, page, pageSize, sort), HttpStatus.OK);
+        return new ResponseEntity<>(naverMapService.getRestaurantLustFromNaver(query, page, pageSize, sort), HttpStatus.OK);
     }
 
 
-    @RequestMapping(method = RequestMethod.POST, value = "/restaurants")
+    @RequestMapping(method = RequestMethod.PUT, value = "/restaurants")
     public ResponseEntity<String> insertLocalInfo(@RequestParam(value = "query", defaultValue = "판교 음식집") String query,
                                                   @RequestParam(value = "sort", defaultValue = "random") String sort,
                                                   @RequestParam(value = "page", defaultValue = "1") Integer page,
@@ -56,7 +54,7 @@ public class NaverApiController {
         if (!Strings.isNullOrEmpty(startingPoint) && !StartingPoint.isExist(startingPoint)) {
             responseEntity = new ResponseEntity<>("unknown statingPoint", HttpStatus.OK);
         } else {
-            naverMapServices.insertRestaurant(query, page, pageSize, sort, startingPoint);
+            naverMapService.insertRestaurant(query, page, pageSize, sort, startingPoint);
         }
         return responseEntity;
     }
@@ -69,12 +67,12 @@ public class NaverApiController {
                                                            @RequestParam(value = "title", required = false) String title,
                                                            @RequestParam(value = "page", defaultValue = "0", required = false) Integer page,
                                                            @RequestParam(value = "pageSize", defaultValue = "100", required = false) Integer pageSize) {
-        return new ResponseEntity<>(naverMapServices.getRestaurantList(startingPoint, distanceType, category, title, page, pageSize), HttpStatus.OK);
+        return new ResponseEntity<>(naverMapService.getRestaurantList(startingPoint, distanceType, category, title, page, pageSize), HttpStatus.OK);
     }
 
     @ApiOperation(value = "카테고리 리스트")
     @RequestMapping(method = RequestMethod.GET, value = "/categories")
     public ResponseEntity<Set<String>> getCategories() {
-        return new ResponseEntity<>(naverMapServices.getCategories(), HttpStatus.OK);
+        return new ResponseEntity<>(naverMapService.getCategories(), HttpStatus.OK);
     }
 }
