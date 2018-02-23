@@ -7,7 +7,6 @@
 !.factorypath
 !.project
 !.settings/
-*.iml
 
 target/
 logs/
