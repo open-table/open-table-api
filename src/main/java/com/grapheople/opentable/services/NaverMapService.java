@@ -113,6 +113,10 @@ public class NaverMapService {
 
     public List<Restaurant> getRestaurantListFromDB() {
         if (restaurantList == null) {
+            List<Restaurant> restaurantListFromDB = restaurantRepository.findAll();
+            restaurantListFromDB.stream().filter(restaurant -> restaurant.getRestaurantDistance().size() == 0).forEach(restaurant -> {
+                saveRestaurantDistance(StartingPoint.PANGYO.getName(), restaurant.getId(), restaurant.getMapx(), restaurant.getMapy());
+            });
             restaurantList = restaurantRepository.findAll();
         }
         return restaurantList;
@@ -129,7 +133,12 @@ public class NaverMapService {
             StartingPoint startingPoint = StartingPoint.convert(startingPointStr);
             DistanceType distanceType = DistanceType.convert(distanceStr);
             result = result.stream()
-                    .filter(restaurant -> getDistance(restaurant.getMapx(), restaurant.getMapy(), startingPoint) < distanceType.getDistance())
+                    .filter(restaurant -> restaurant.getRestaurantDistance().size() > 0)
+                    .filter(restaurant -> restaurant.getRestaurantDistance().stream()
+                            .filter(restaurantDistance -> restaurantDistance.getStartingPoint().equals(startingPointStr))
+                            .findFirst()
+                            .orElse(new RestaurantDistance(0L,"",10000.0f))
+                            .getDistance() < distanceType.getDistance())
                     .collect(Collectors.toList());
         }
 

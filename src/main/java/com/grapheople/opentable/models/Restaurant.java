@@ -45,9 +45,10 @@ public class Restaurant {
     @Column(name = "mapy")
     private Integer mapy;
 
-//    @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL)
-//    @JoinColumn(name = "restaurant_id")
-//    private List<RestaurantDistance> restaurantDistance;
+
+    @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "restaurant_id")
+    private List<RestaurantDistance> restaurantDistance;
 
     public Restaurant() {
 
